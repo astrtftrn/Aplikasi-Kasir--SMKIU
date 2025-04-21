@@ -20,7 +20,7 @@ class CreateProduksTable extends Migration
             $table->unsignedInteger('Stok'); 
             $table->text('Deskripsi')->nullable(); 
             $table->unsignedBigInteger('KategoriID'); 
-            // $table->string('GambarProduk', 255)->nullable(); // Menambahkan field gambar produk
+            $table->string('GambarProduk')->nullable(); // Menambahkan field gambar produk
             $table->timestamps(); 
         });
     }

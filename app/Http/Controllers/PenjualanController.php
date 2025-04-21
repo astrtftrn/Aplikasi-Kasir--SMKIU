@@ -43,68 +43,69 @@ class PenjualanController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'TanggalPenjualan' => 'required|date',
-            'PelangganID' => 'required|integer',
-            'ProdukID' => 'required|array',
-            'ProdukID.*' => 'exists:produks,ProdukID',
-            'JumlahProduk' => 'required|array',
-            'JumlahProduk.*' => 'integer|min:1',
+{
+    // Validasi input
+    $request->validate([
+        'TanggalPenjualan' => 'required|date|after_or_equal:' . now()->toDateString(), // Menambahkan validasi untuk memastikan tanggal tidak lebih dari hari ini
+        'PelangganID' => 'required|integer',
+        'ProdukID' => 'required|array',
+        'ProdukID.*' => 'exists:produks,ProdukID',
+        'JumlahProduk' => 'required|array',
+        'JumlahProduk.*' => 'integer|min:1',
+    ]);
+
+    // Memulai transaksi database
+    DB::beginTransaction();
+    try {
+        // Membuat data penjualan
+        $penjualan = Penjualan::create([
+            'TanggalPenjualan' => $request->TanggalPenjualan,
+            'TotalHarga' => 0, // Akan diperbarui setelah detail dimasukkan
+            'PelangganID' => $request->PelangganID,
         ]);
 
-        // Memulai transaksi database
-        DB::beginTransaction();
-        try {
-            // Membuat data penjualan
-            $penjualan = Penjualan::create([
-                'TanggalPenjualan' => $request->TanggalPenjualan,
-                'TotalHarga' => 0, // Akan diperbarui setelah detail dimasukkan
-                'PelangganID' => $request->PelangganID,
-            ]);
+        $totalHarga = 0;
 
-            $totalHarga = 0;
+        // Memproses detail penjualan
+        foreach ($request->ProdukID as $index => $produkID) {
+            $produk = Produk::findOrFail($produkID);
+            $jumlahProduk = $request->JumlahProduk[$index];
 
-            // Memproses detail penjualan
-            foreach ($request->ProdukID as $index => $produkID) {
-                $produk = Produk::findOrFail($produkID);
-                $jumlahProduk = $request->JumlahProduk[$index];
-
-                // Periksa apakah stok cukup
-                if ($produk->Stok < $jumlahProduk) {
-                    return redirect()->back()->with('error', 'Stok produk ' . $produk->NamaProduk . ' tidak mencukupi.');
-                }
-
-                $subtotal = $produk->Harga * $jumlahProduk;
-                $totalHarga += $subtotal;
-
-                // Simpan detail penjualan
-                Detailpenjualan::create([
-                    'PenjualanID' => $penjualan->PenjualanID,
-                    'ProdukID' => $produkID,
-                    'JumlahProduk' => $jumlahProduk,
-                    'Harga' => $produk->Harga,
-                    'Subtotal' => $subtotal,
-                ]);
-
-                // Kurangi stok produk
-                $produk->decrement('Stok', $jumlahProduk);
+            // Periksa apakah stok cukup
+            if ($produk->Stok < $jumlahProduk) {
+                return redirect()->back()->with('error', 'Stok produk ' . $produk->NamaProduk . ' tidak mencukupi.');
             }
 
-            // Perbarui total harga di penjualan
-            $penjualan->update(['TotalHarga' => $totalHarga]);
+            $subtotal = $produk->Harga * $jumlahProduk;
+            $totalHarga += $subtotal;
 
-            // Commit transaksi jika semua berhasil
-            DB::commit();
+            // Simpan detail penjualan
+            Detailpenjualan::create([
+                'PenjualanID' => $penjualan->PenjualanID,
+                'ProdukID' => $produkID,
+                'JumlahProduk' => $jumlahProduk,
+                'Harga' => $produk->Harga,
+                'Subtotal' => $subtotal,
+            ]);
 
-            return redirect()->route('pembayaran.create')->with('success', 'Penjualan berhasil dibuat.');
-        } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            // Kurangi stok produk
+            $produk->decrement('Stok', $jumlahProduk);
         }
+
+        // Perbarui total harga di penjualan
+        $penjualan->update(['TotalHarga' => $totalHarga]);
+
+        // Commit transaksi jika semua berhasil
+        DB::commit();
+
+        return redirect()->route('pembayaran.create')->with('success', 'Penjualan berhasil dibuat.');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollBack();
+        return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
+}
+
 
     public function show($id)
     {

@@ -2,63 +2,64 @@
 
 @section('content')
 <style>
-    /* Background Styling */
     body {
-        background: url('https://source.unsplash.com/1600x900/?technology,signup') no-repeat center center fixed;
+        background: url('{{ asset('assets/images/logos/regiskasir.png') }}') no-repeat center center fixed;
         background-size: cover;
-        position: relative;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
     }
 
-    /* Overlay Transparan */
+    /* Hapus overlay gelap sebelumnya */
     body::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(10px);
+        display: none;
     }
 
-    /* Glassmorphism Card */
     .glass-card {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.8); /* Lebih terang & solid */
+        backdrop-filter: blur(5px);
         border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
-        color: #fff;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        color: #000; /* Ubah teks jadi hitam agar terbaca */
         border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    /* Input Field */
+    .form-label,
+    .card-header h3,
+    .card-footer,
+    .text-white {
+        color: #000 !important; /* Teks jadi hitam agar jelas */
+    }
+
     .form-control {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #fff;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        color: #000;
     }
 
     .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(0, 0, 0, 0.5);
     }
 
     .form-control:focus {
         border-color: #007BFF;
-        box-shadow: 0 0 15px rgba(0, 123, 255, 0.8);
-        background: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+        background: rgba(255, 255, 255, 0.8);
+        color: #000;
     }
 
-    /* Neon Glow Input Icons */
     .input-group-text {
         background: transparent;
-        color: white;
+        color: #000;
         border: none;
         font-size: 1.2rem;
     }
 
     .input-group:hover .input-group-text {
         color: #007BFF;
-        text-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+        text-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
     }
 
-    /* Button Hover */
     .btn-hover {
         transition: all 0.3s ease-in-out;
         background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
@@ -67,14 +68,18 @@
     }
 
     .btn-hover:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
         background: linear-gradient(135deg, #0056b3 0%, #007BFF 100%);
-        box-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
     }
 
+    .card-footer a {
+        color: #007BFF;
+        font-weight: bold;
+    }
 </style>
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
+<div class="container d-flex justify-content-center align-items-center min-vh-100" style="z-index: 1;">
     <div class="col-md-6">
         <div class="card glass-card p-4">
             <div class="card-header text-center bg-transparent border-0">

@@ -4,9 +4,13 @@
 <style>
     /* Background Styling */
     body {
-        background: url('https://source.unsplash.com/1600x900/?technology,finance') no-repeat center center fixed;
+        background: url('{{ asset('assets/images/logos/desain.jpg') }}') no-repeat center center fixed;
         background-size: cover;
         position: relative;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        filter: brightness(0.8); /* Menerapkan filter kecerahan untuk gambar agar lebih jelas */
     }
 
     /* Overlay Transparan */
@@ -14,41 +18,44 @@
         content: "";
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.5); /* Memperjelas overlay */
+        z-index: 1; /* Menjamin overlay berada di bawah konten */
+        backdrop-filter: blur(5px); /* Menambahkan efek blur yang lebih ringan */
     }
 
     /* Login Card Styling */
     .glass-card {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.8); /* Lighter & solid */
+        backdrop-filter: blur(5px);
         border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
-        color: #fff;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        color: #000; /* Black text for visibility */
         border: 1px solid rgba(255, 255, 255, 0.3);
+        z-index: 2; /* Card berada di atas overlay */
     }
 
     /* Input Field */
     .form-control {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #fff;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        color: #000;
     }
 
     .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(0, 0, 0, 0.5);
     }
 
     .form-control:focus {
         border-color: #007BFF;
-        box-shadow: 0 0 15px rgba(0, 123, 255, 0.8);
-        background: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+        background: rgba(255, 255, 255, 0.8);
+        color: #000;
     }
 
     /* Neon Glow Input Icons */
     .input-group-text {
         background: transparent;
-        color: white;
+        color: #000;
         border: none;
         font-size: 1.2rem;
     }
@@ -72,13 +79,17 @@
         box-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
     }
 
+    /* Custom text color */
+    .text-black {
+        color: #000000 !important;
+    }
 </style>
 
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="col-md-5">
         <div class="card glass-card p-4">
             <div class="card-header text-center bg-transparent border-0">
-                <h3 class="text-white"><i class="fas fa-cash-register me-2"></i>Login</h3>
+                <h3 class="text-black"><i class="fas fa-cash-register me-2"></i>Login</h3>
             </div>
 
             <div class="card-body">
@@ -103,7 +114,7 @@
 
                     <!-- Email Input -->
                     <div class="mb-3">
-                        <label for="email" class="form-label text-white">Email</label>
+                        <label for="email" class="form-label text-black">Email</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required>
@@ -117,7 +128,7 @@
 
                     <!-- Password Input -->
                     <div class="mb-3">
-                        <label for="password" class="form-label text-white">Password</label>
+                        <label for="password" class="form-label text-black">Password</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
@@ -132,7 +143,7 @@
                     <!-- Remember Me Checkbox -->
                     <div class="mb-3 form-check">
                         <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                        <label class="form-check-label text-white" for="remember">
+                        <label class="form-check-label text-black" for="remember">
                             Remember Me
                         </label>
                     </div>
@@ -147,7 +158,7 @@
                     <!-- Forgot Password Link -->
                     @if (Route::has('password.request'))
                         <div class="mt-3 text-center">
-                            <a class="btn btn-link text-white" href="{{ route('password.request') }}">
+                            <a class="btn btn-link text-black" href="{{ route('password.request') }}">
                                 Forgot Your Password?
                             </a>
                         </div>

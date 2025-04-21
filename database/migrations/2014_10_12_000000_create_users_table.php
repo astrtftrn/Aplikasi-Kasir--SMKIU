@@ -19,11 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role_as', ['admin', 'kasir']);
+            // $table->enum('role_as', ['admin', 'kasir']);
+            // $table->string('status')->default('pending'); // ✅ Tambahan field status
             $table->rememberToken();
             $table->timestamps();
         });
-        
     }
 
     /**

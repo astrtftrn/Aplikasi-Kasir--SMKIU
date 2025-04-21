@@ -18,7 +18,7 @@ class Produk extends Model
         'Stok', 
         'Deskripsi',
         'KategoriID',
-        // 'GambarProduk' // Menambahkan field gambar produk
+        'GambarProduk' // Menambahkan field gambar produk
     ];
 
     public function kategori()

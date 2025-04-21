@@ -72,30 +72,62 @@
                 @endif
 
                 <!-- Tambahkan Cetak Laporan di atas menu Akun -->
-<li class="nav-title">Laporan</li>
-<li class="sidebar-item">
-    <a class="sidebar-link" href="{{ route('penjualan.laporan.cetak') }}">
-        <i class="ti ti-printer"></i> <span>Cetak Laporan</span>
-    </a>
-</li>
+                <li class="nav-title">Laporan</li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('penjualan.laporan.cetak') }}">
+                        <i class="ti ti-printer"></i> <span>Cetak Laporan</span>
+                    </a>
+                </li>
 
-
-<!-- Menu Akun -->
-<li class="nav-title">Akun</li>
-<li class="sidebar-item">
-    <a class="sidebar-link" href="{{ route('logout') }}"
-        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-        <i class="ti ti-logout"></i> <span>Logout</span>
-    </a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
-</li>
+                <!-- Menu Akun -->
+                <li class="nav-title">Akun</li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" id="logout-link">
+                        <i class="ti ti-logout"></i> <span>Logout</span>
+                    </a>
+                </li>
 
             </ul>
         </nav>
     </div>
 </aside>
+
+<!-- Form logout (tetap disembunyikan) -->
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>
+
+<!-- SweetAlert Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('logout-link').addEventListener('click', function(e) {
+        e.preventDefault();  // Mencegah link default behavior
+
+        // Menampilkan SweetAlert konfirmasi logout
+        Swal.fire({
+            title: 'Apakah kamu yakin ingin logout?',
+            text: "Kamu akan keluar dari akun ini.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Logout',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika pengguna mengonfirmasi, submit form logout
+                document.getElementById('logout-form').submit();
+                
+                // Menampilkan SweetAlert setelah logout berhasil
+                Swal.fire({
+                    title: 'Anda berhasil logout',
+                    text: 'Terima kasih telah menggunakan aplikasi kami!',
+                    icon: 'success',
+                    confirmButtonText: 'Tutup'
+                });
+            }
+        });
+    });
+</script>
 
 <!-- CSS Styling -->
 <style>

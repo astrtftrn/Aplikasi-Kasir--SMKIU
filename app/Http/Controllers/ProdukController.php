@@ -79,17 +79,17 @@ class ProdukController extends Controller
         $produk = Produk::findOrFail($id);
         $data = $request->all();
 
-        // if ($request->hasFile('GambarProduk')) {
-        //     // Hapus gambar lama jika ada
-        //     if ($produk->GambarProduk) {
-        //         Storage::disk('public')->delete($produk->GambarProduk);
-        //     }
+        if ($request->hasFile('GambarProduk')) {
+            // Hapus gambar lama jika ada
+            if ($produk->GambarProduk) {
+                Storage::disk('public')->delete($produk->GambarProduk);
+            }
 
-        //     // Simpan gambar baru
-        //     $file = $request->file('GambarProduk');
-        //     $path = $file->store('produk_images', 'public');
-        //     $data['GambarProduk'] = $path;
-        // }
+            // Simpan gambar baru
+            $file = $request->file('GambarProduk');
+            $path = $file->store('produk_images', 'public');
+            $data['GambarProduk'] = $path;
+        }
 
         $produk->update($data);
 
